@@ -2,14 +2,12 @@
 Created on 12/dic/2013
 
 @author: Marco Pompili
+
+Significantly modified by Dmitry E. Kislov, 2 sept., 2017
 """
 
 from django import template
-
-from sorl.thumbnail import get_thumbnail, delete
-
-from django_instagram import settings
-from django_instagram.scraper import instagram_profile_json, instagram_profile_obj
+from django_instagram.scraper import instagram_profile_obj
 
 register = template.Library()
 
@@ -39,7 +37,6 @@ class InstagramUserRecentMediaNode(template.Node):
         return ''
 
 
-
 @register.tag
 def instagram_user_recent_media(parser, token):
     """
@@ -57,6 +54,7 @@ def instagram_user_recent_media(parser, token):
             "%r tag requires a single argument" % token.contents.split()[0]
         )
 
+
 @register.inclusion_tag('django_instagram/recent_media_box.html')
 def instagram_recent_media_box(*args, **kwargs):
     profile = instagram_profile_obj(username=kwargs.get('username'))
@@ -66,32 +64,3 @@ def instagram_recent_media_box(*args, **kwargs):
         'profile': profile,
         'recent_media': recent_media
     }
-
-
-@register.inclusion_tag('django_instagram/recent_media_wall.html')
-def instagram_recent_media_wall(*args, **kwargs):
-    profile = instagram_profile_obj(username=kwargs.get('username'))
-    recent_media = get_profile_media(profile)
-
-    return {
-        'profile': profile,
-        'recent_media': recent_media,
-    }
-
-
-@register.filter(name='standard_size')
-def instagram_standard_size(value):
-    im = get_thumbnail(value, settings.INSTAGRAM_STANDARD_SIZE, crop='center', quality=90)
-    return im.url
-
-
-@register.filter(name='low_resolution')
-def instagram_low_resolution(value):
-    im = get_thumbnail(value, settings.INSTAGRAM_LOW_SIZE, crop='center', quality=90)
-    return im.url
-
-
-@register.filter(name='thumbnail')
-def instagram_thumbnail(value):
-    im = get_thumbnail(value, settings.INSTAGRAM_THUMB_SIZE, crop='center', quality=90)
-    return im.url
