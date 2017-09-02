@@ -4,7 +4,7 @@ django-instagram
 
 Significantly rearranged version of the original `django-instagram <https://github.com/marcopompili/django-instagram>`_
 
-Don't use this app, if in doubt; It is developed to solve a particular task only...
+Don't use this app, if in doubt; It is created to solve a particular task only...
 
 ------------
 Requirements
