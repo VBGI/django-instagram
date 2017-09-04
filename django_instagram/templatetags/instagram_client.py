@@ -26,7 +26,6 @@ def get_profile_media(profile, page = 0):
 def instagram_recent_media_box(*args, **kwargs):
     profile = instagram_profile_obj(username=kwargs.get('username'))
     recent_media = get_profile_media(profile)
-
     return {
         'profile': profile,
         'recent_media': recent_media
