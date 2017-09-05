@@ -1,0 +1,78 @@
+{%  load staticfiles sekizai_tags cms_tags %}
+
+
+<div class="instagram-container">
+     <div class="pluginlist">
+        <div id="instagram{{instance.pk}}">
+
+
+	<div  onclick="document.location.href = '{%if item.link %}{{item.link}}{%else%}
+	{%page_url item.pagelink %}{%endif%}';">
+        <img src={{im.url}} width="{{im.width}}" height="{{im.height}}" alt="{{item.text}}">
+    </div>
+
+
+	</div>
+   </div>
+
+</div>
+
+
+
+{% addtoblock "css" %}
+<link href="{% static 'django_instagram/css/instagram.css' %}" rel="stylesheet" type="text/css"/>
+{% endaddtoblock %}
+
+{% addtoblock "js" %}
+<script type="text/javascript" src="{% static 'django_instagram/js/slick.min.js' %}"></script>
+{% endaddtoblock %}
+
+{% addtoblock "js" %}
+
+<script type="text/javascript">
+
+var is_ready_instagram{{instance.pk}} = false;
+
+function check_if_instagram_ready(){
+
+$.get()
+
+
+}
+
+
+$(document).ready(function(){
+    var instagram_periodic = setInterval(check_if_instagram_ready, 2000);
+
+
+	$('#instagram{{object.pk}}').slick({
+	autoplay : true,
+	dots: false,
+	centermode: false,
+	speed: {{instance.delay}},
+	fade: true,
+	arrows: false,
+	});
+});
+</script>
+{% endaddtoblock %}
+
+
+
+{% if recent_media %}
+    <div class="django_instagram">
+        <ul class="slider">
+            {% for media in recent_media %}
+            <li class="entry">
+                <a href="{{ media.display_src }}" title="{{ media.caption }}" target="_blank">
+                    <img src="{{ media.thumbnail_src }}"/>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
+
+
+
