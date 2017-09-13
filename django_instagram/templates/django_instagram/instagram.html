@@ -1,51 +1,59 @@
 {%  load staticfiles sekizai_tags cms_tags %}
 
-
 <div class="instagram-container">
-     <div class="pluginlist">
+     <div>
         <div id="instagram{{instance.pk}}">
-
-
-	<div  onclick="document.location.href = '{%if item.link %}{{item.link}}{%else%}
-	{%page_url item.pagelink %}{%endif%}';">
-        <img src={{im.url}} width="{{im.width}}" height="{{im.height}}" alt="{{item.text}}">
-    </div>
-
-
-	</div>
+            <div class="instagram-loading"></div>
+	    </div>
    </div>
-
 </div>
 
 
-
 {% addtoblock "css" %}
-<link href="{% static 'django_instagram/css/instagram.css' %}" rel="stylesheet" type="text/css"/>
+<style type="text/css">
+.instagram-loading {
+  background: {% static 'django_instagram/images/ajax-loader.gif' %};
+  height: 32px;
+  margin: 0 auto;
+  width: 32px;
+  z-index: 100;
+}
+</style>
 {% endaddtoblock %}
 
 {% addtoblock "js" %}
 <script type="text/javascript" src="{% static 'django_instagram/js/slick.min.js' %}"></script>
-{% endaddtoblock %}
-
-{% addtoblock "js" %}
 
 <script type="text/javascript">
-
 var is_ready_instagram{{instance.pk}} = false;
+var instagram_data = null;
+var loading_flag = false;
 
-function check_if_instagram_ready(){
+function load_instagram_data(){
+if ((instagram_data==null)&&(!loading_flag)) {
+    loading_flag = true;
+    $.get({
+    url: {%url "instagram-app-loader"%},
+    dataType: 'json',
+    data: {'username': "{{instance.username}}"},
+    success: function(result){
+        instagram_data = result;
+        loading_flag = false;
+        }})
+    }
 
-$.get()
+if (instagram_data!=null){
+clearInterval(instagram_periodic);
+var outputHtml = '';
 
-
+for (var i=0; (i < instagram_data.length)&&(i<{{instance.num}}); i++){
+var media = instagram_data[i];
+outputHtml += '<div  onclick="document.location.href = http://instagram.com/{{instance.username}}">'
+outputHtml += '<img src="' + media['thumbnail_src'] + '" title="'+ media['caption'] + '" width="' + {{instance.size}} + 'px"/>';
+outputHtml += '</div>'
 }
-
-
-$(document).ready(function(){
-    var instagram_periodic = setInterval(check_if_instagram_ready, 2000);
-
-
-	$('#instagram{{object.pk}}').slick({
+$('#instagram{{instance.pk}}').html(outputHtml);
+$('#instagram{{instance.pk}}').slick({
 	autoplay : true,
 	dots: false,
 	centermode: false,
@@ -53,26 +61,8 @@ $(document).ready(function(){
 	fade: true,
 	arrows: false,
 	});
-});
+}
+}
+var instagram_periodic = setInterval(load_instagram_data, 2000);
 </script>
 {% endaddtoblock %}
-
-
-
-{% if recent_media %}
-    <div class="django_instagram">
-        <ul class="slider">
-            {% for media in recent_media %}
-            <li class="entry">
-                <a href="{{ media.display_src }}" title="{{ media.caption }}" target="_blank">
-                    <img src="{{ media.thumbnail_src }}"/>
-                </a>
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
-{% endif %}
-
-
-
-
