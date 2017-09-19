@@ -2,6 +2,7 @@
 
 from cms.models.pluginmodel import CMSPlugin
 from django.utils.translation import ugettext_lazy as _
+from django.db import models
 
 
 class Instagram(CMSPlugin):
@@ -11,4 +12,4 @@ class Instagram(CMSPlugin):
     size = models.IntegerField(verbose_name=_(u'размер изображения'), default=150)
 
     def __unicode__(self):
-        return '|'.join([self.username, str(self.delay), self.num, self.size])
+        return '|'.join([self.username, str(self.delay), str(self.num), str(self.size)])

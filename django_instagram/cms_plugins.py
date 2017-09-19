@@ -3,7 +3,7 @@
 from cms.plugin_base import CMSPluginBase
 from .models import Instagram
 from django.utils.translation import ugettext_lazy as _
-
+from cms.plugin_pool import plugin_pool
 
 class InstagramPlugin(CMSPluginBase):
     model = Instagram
@@ -15,3 +15,6 @@ class InstagramPlugin(CMSPluginBase):
         context.update({
             'instance': instance})
         return context
+
+
+plugin_pool.register_plugin(InstagramPlugin)

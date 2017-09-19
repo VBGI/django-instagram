@@ -1,6 +1,6 @@
 {%  load staticfiles sekizai_tags cms_tags %}
 
-<div class="instagram-container">
+<div class="instagram-container" onclick="openInNewTab('http://instagram.com/{{instance.username}}')">
      <div>
         <div id="instagram{{instance.pk}}">
             <div class="instagram-loading"></div>
@@ -18,6 +18,13 @@
   width: 32px;
   z-index: 100;
 }
+.instagram-container {
+clear: both;
+margin: 0 auto;
+cursor: pointer;
+width: {{instance.size}}px;
+}
+
 </style>
 {% endaddtoblock %}
 
@@ -27,20 +34,28 @@
 <script type="text/javascript">
 var is_ready_instagram{{instance.pk}} = false;
 var instagram_data = null;
-var loading_flag = false;
+var loading_flag = true;
+
+function openInNewTab(url) {
+  var win = window.open(url, '_blank');
+  win.focus();
+}
+
 
 function load_instagram_data(){
-if ((instagram_data==null)&&(!loading_flag)) {
+if ((instagram_data==null)&&(loading_flag)) {
     loading_flag = true;
-    $.get({
-    url: {%url "instagram-app-loader"%},
-    dataType: 'json',
-    data: {'username': "{{instance.username}}"},
-    success: function(result){
-        instagram_data = result;
-        loading_flag = false;
-        }})
-    }
+
+ $.ajax({
+   url: "{%url "instagram-app-loader"  instance.username%}",
+   data: '',
+   dataType: 'json',
+   contentType: 'application/json',
+   type: 'GET',
+   cache: false,
+   success: function(result) {
+      instagram_data = result;
+      loading_flag = false;}});}
 
 if (instagram_data!=null){
 clearInterval(instagram_periodic);
@@ -48,7 +63,7 @@ var outputHtml = '';
 
 for (var i=0; (i < instagram_data.length)&&(i<{{instance.num}}); i++){
 var media = instagram_data[i];
-outputHtml += '<div  onclick="document.location.href = http://instagram.com/{{instance.username}}">'
+outputHtml += '<div >'
 outputHtml += '<img src="' + media['thumbnail_src'] + '" title="'+ media['caption'] + '" width="' + {{instance.size}} + 'px"/>';
 outputHtml += '</div>'
 }

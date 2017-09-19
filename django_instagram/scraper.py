@@ -14,7 +14,7 @@ except ImportError:
 import json
 import re
 
-_pat = re.compile(r'\<script\s?type="text/javascript"\>\s?window\._sharedData\s?=\s?\{(.*?)\};</script>')
+_pat = re.compile(b'\<script\s?type="text/javascript"\>\s?window\._sharedData\s?=\s?\{(.*?)\};</script>')
 
 
 def instagram_scrap_profile(username):
@@ -30,7 +30,7 @@ def instagram_profile_obj(username):
     except IndexError:
         match = ''
     try:
-        jsonified = json.loads(match)
-    except TypeError:
+        jsonified = json.loads("{" + match.decode('utf-8') + "}")
+    except (TypeError, ValueError):
         jsonified = {}
     return jsonified
