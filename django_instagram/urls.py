@@ -4,5 +4,5 @@ from django.conf.urls import *
 from .views import get_instagram_data
 
 urlpatterns = patterns('',
-    url(r'^data/([a-zA-Z0-9_]{1,50})', get_instagram_data, name='instagram-app-loader')
+    url(r'^([a-zA-Z0-9_]+)', get_instagram_data, name='instagram-app-loader')
     )
