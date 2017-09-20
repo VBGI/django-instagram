@@ -2,7 +2,7 @@
 
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.cache import cache_page, never_cache
+from django.views.decorators.cache import cache_page
 from .models import Instagram
 from .scraper import instagram_profile_obj
 import re
@@ -11,7 +11,7 @@ import json
 mlength = Instagram._meta.get_field('username').max_length
 
 @csrf_exempt
-@never_cache
+@cache_page(20000)
 def get_instagram_data(request, username):
     print(username)
     if re.match(r'[a-zA-Z_]+', username) and len(username) < mlength:
