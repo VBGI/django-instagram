@@ -12,11 +12,12 @@
 {% addtoblock "css" %}
 <style type="text/css">
 .instagram-loading {
-  background: {% static 'django_instagram/images/ajax-loader.gif' %};
+  background: url({% static 'django_instagram/images/ajax-loader.gif' %});
   height: 32px;
-  margin: 0 auto;
   width: 32px;
+  margin: 0 auto;
   z-index: 100;
+  clear: both;
 }
 .instagram-container {
 clear: both;
@@ -24,7 +25,6 @@ margin: 0 auto;
 cursor: pointer;
 width: {{instance.size}}px;
 }
-
 </style>
 {% endaddtoblock %}
 
