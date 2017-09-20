@@ -30,7 +30,6 @@ width: {{instance.size}}px;
 
 {% addtoblock "js" %}
 <script type="text/javascript" src="{% static 'django_instagram/js/slick.min.js' %}"></script>
-
 <script type="text/javascript">
 var is_ready_instagram{{instance.pk}} = false;
 var instagram_data = null;
@@ -40,12 +39,9 @@ function openInNewTab(url) {
   var win = window.open(url, '_blank');
   win.focus();
 }
-
-
 function load_instagram_data(){
 if ((instagram_data==null)&&(loading_flag)) {
     loading_flag = true;
-
  $.ajax({
    url: "{%url "instagram-app-loader"  instance.username%}",
    data: '',
@@ -56,11 +52,9 @@ if ((instagram_data==null)&&(loading_flag)) {
    success: function(result) {
       instagram_data = result;
       loading_flag = false;}});}
-
 if (instagram_data!=null){
 clearInterval(instagram_periodic);
 var outputHtml = '';
-
 for (var i=0; (i < instagram_data.length)&&(i<{{instance.num}}); i++){
 var media = instagram_data[i];
 outputHtml += '<div >'
