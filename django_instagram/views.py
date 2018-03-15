@@ -16,9 +16,20 @@ def get_instagram_data(request, username):
     print(username)
     if re.match(r'[a-zA-Z_]+', username) and len(username) < mlength:
         profile = instagram_profile_obj(username=username)
-        media = profile['entry_data']['ProfilePage'][-1]['user']['media']['nodes']
+        try:
+            media = profile['entry_data']['ProfilePage'][-1]['user']['media']['nodes']
+        except:
+            media = profile['entry_data']['ProfilePage'][0]['graphql']['user']['edge_owner_to_timeline_media']['edges']
+        result = []
         for k in range(len(media)):
-            media[k]['caption'] = media[k]['caption'].replace('#', ' #')
-        return HttpResponse(json.dumps(media), content_type="application/json")
+            result.append(dict())
+            try:
+                result[k].update({'caption': media[k]['caption'].replace('#', ' #')})
+            except:
+                result[k].update({'caption': media[k]['node']['edge_media_to_caption']['edges'][-1]['node']['text'].replace('#', ' #')})
+                result[k].update({'thumbnail_src': media[k]['node']['thumbnail_src']})
+        return HttpResponse(json.dumps(result), content_type="application/json")
     else:
         return HttpResponse('[]', content_type="application/json")
+    
+
