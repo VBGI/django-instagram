@@ -11,9 +11,8 @@ import json
 mlength = Instagram._meta.get_field('username').max_length
 
 @csrf_exempt
-@cache_page(20000)
+@cache_page(40000)
 def get_instagram_data(request, username):
-    print(username)
     if re.match(r'[a-zA-Z_]+', username) and len(username) < mlength:
         profile = instagram_profile_obj(username=username)
         try:
