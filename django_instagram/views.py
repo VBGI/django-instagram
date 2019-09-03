@@ -17,8 +17,11 @@ def get_instagram_data(request, username):
         profile = instagram_profile_obj(username=username)
         try:
             media = profile['entry_data']['ProfilePage'][-1]['user']['media']['nodes']
-        except:
-            media = profile['entry_data']['ProfilePage'][0]['graphql']['user']['edge_owner_to_timeline_media']['edges']
+        except KeyError:
+            try:
+                media = profile['entry_data']['ProfilePage'][0]['graphql']['user']['edge_owner_to_timeline_media']['edges']
+            except KeyError:
+                media = dict()
         result = []
         for k in range(len(media)):
             result.append(dict())
@@ -30,5 +33,3 @@ def get_instagram_data(request, username):
         return HttpResponse(json.dumps(result), content_type="application/json")
     else:
         return HttpResponse('[]', content_type="application/json")
-    
-
