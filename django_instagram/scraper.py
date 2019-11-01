@@ -19,8 +19,16 @@ _pat = re.compile(b'\<script\s?type="text/javascript"\>\s?window\._sharedData\s?
 
 def instagram_scrap_profile(username):
     url = "https://www.instagram.com/{}/".format(username)
-    page = urlopen(url)
-    return page.read()
+    data = urlopen("https://raw.githubusercontent.com/scidam/proxy-list/master/proxy.json").read()
+    proxies = json.loads(data)
+    for proxy in proxies['proxies']:
+        if proxy['google_status'] == 200:
+            candidate = {'http': "http://{}:{}/".format(proxy['ip'], proxy['port'])}
+            page = urlopen(url, proxies=candidate)
+            if page.getcode() == 200:
+                return page.read()
+    else:
+        return ''
 
 
 def instagram_profile_obj(username):
